@@ -30,7 +30,7 @@ limiter = Limiter(
     key_func=get_remote_address,
     default_limits=['10/second']
 )
-limiter.init_app(main)
+limiter.init_app(app)
 
 
 ########################################################################
@@ -40,7 +40,7 @@ limiter.init_app(main)
 ########################################################################
 
 
-@main.route('/CDN/images/<image_name>')
+@app.route('/CDN/images/<image_name>')
 def images(image_name: str):
     """
     Send the requested image file if it exists.
@@ -65,7 +65,7 @@ def images(image_name: str):
 ########################################################################
 
 
-@main.before_first_request
+@app.before_first_request
 def clean_up_on_startup():
     with open("secrets.json", "rb") as f:
         secrets = json.load(f)
@@ -96,6 +96,6 @@ def rate_limit_reached(error):
 if __name__ == '__main__':
     if not os.path.exists('LOGS'):
         os.mkdir('LOGS')
-    main.register_error_handler(429, rate_limit_reached)
-    main.register_error_handler(404, handle_not_found)
-    main.run(debug=True, host='0.0.0.0')
+    app.register_error_handler(429, rate_limit_reached)
+    app.register_error_handler(404, handle_not_found)
+    app.run(debug=True, host='0.0.0.0')
