@@ -20,9 +20,9 @@ if not os.path.exists("secrets.json"):
 with open("secrets.json", "rb") as f:
     secrets = json.load(f)
 
-main = Flask(__name__)
+app = Flask(__name__)
 
-main.config['SECRET_KEY'] = secrets['secretKey']
+app.config['SECRET_KEY'] = secrets['secretKey']
 
 del secrets
 
@@ -67,6 +67,8 @@ def images(image_name: str):
 
 @app.before_first_request
 def clean_up_on_startup():
+    if not os.path.exists('LOGS'):
+        os.mkdir('LOGS')
     with open("secrets.json", "rb") as f:
         secrets = json.load(f)
     if secrets['dev'] == False:
@@ -83,7 +85,7 @@ def handle_not_found(error):
         open('LOGS/404.log', 'w')
     with open('LOGS/404.log', 'a') as f:
         f.write(str(datetime.now()) + ' | ' + str(request.remote_addr) + ' | ' + str(request.url) + '\n')
-    return "", 404
+    return "Error: file not found", 404
 
 @app.errorhandler(429)
 def rate_limit_reached(error):
@@ -91,7 +93,7 @@ def rate_limit_reached(error):
         open('LOGS/429.log', 'w')
     with open('LOGS/429.log', 'a') as f:
         f.write(str(datetime.now()) + ' | ' + str(request.remote_addr) + ' | ' + str(request.url) + '\n')
-    return "", 429
+    return "Error: rate limit reached", 429
 
 
 if __name__ == '__main__':
