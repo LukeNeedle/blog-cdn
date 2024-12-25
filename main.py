@@ -5,13 +5,13 @@ import json
 from flask import (
     request,
     send_file,
-    abort
+    abort,
+    Flask
 )
 from flask_limiter import Limiter
 from flask_limiter.util import get_remote_address
 from git.cmd import Git
 
-from flask import Flask
 
 if not os.path.exists("secrets.json"):
     print("CRITICAL: secrets.json not found, cannot start server")
