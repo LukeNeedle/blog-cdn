@@ -77,6 +77,7 @@ def clean_up_on_startup():
     if os.path.exists('LOGS/429.log'):
         os.remove('LOGS/429.log')
 
+@app.errorhandler(404)
 def handle_not_found(error):
     if not os.path.exists('LOGS/404.log'):
         open('LOGS/404.log', 'w')
@@ -84,7 +85,7 @@ def handle_not_found(error):
         f.write(str(datetime.now()) + ' | ' + str(request.remote_addr) + ' | ' + str(request.url) + '\n')
     return "", 404
 
-
+@app.errorhandler(429)
 def rate_limit_reached(error):
     if not os.path.exists('LOGS/429.log'):
         open('LOGS/429.log', 'w')
