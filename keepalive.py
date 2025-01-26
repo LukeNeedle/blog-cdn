@@ -1,3 +1,7 @@
 import requests
+import json
 
-print(requests.get('http://0.0.0.0/api/keepalive').text)
+with open("secrets.json", "r") as f:
+    url = json.load(f)['url']
+
+print(requests.get(f"{url}/api/keepalive").text)
