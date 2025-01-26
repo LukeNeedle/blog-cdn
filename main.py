@@ -40,6 +40,10 @@ limiter.init_app(app)
 ########################################################################
 
 
+@app.route('/api/keepalive')
+def keepalive_api():
+    return "I'm Alive!"
+
 @app.route('/CDN/images/<image_name>')
 def images(image_name: str):
     """
